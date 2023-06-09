@@ -1,3 +1,5 @@
+import { SetTranslateEventListeners, getWord } from "./text-selector"
+
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const debounce = (f, wait, immediate) => {
@@ -482,6 +484,7 @@ export class Paginator extends HTMLElement {
             doc.addEventListener('touchstart', this.#onTouchStart.bind(this), opts)
             doc.addEventListener('touchmove', this.#onTouchMove.bind(this), opts)
             doc.addEventListener('touchend', this.#onTouchEnd.bind(this))
+            SetTranslateEventListeners(doc)
         })
     }
     attributeChangedCallback(name, _, value) {
