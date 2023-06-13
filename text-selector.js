@@ -53,10 +53,10 @@ function getSentence(x, y, doc) {
 }
 
 export function setOnTextChosenCallback(func) {
-    onWordChosen = func
+    onTextChosen = func
 }
 
-var onWordChosen = (word) => {console.log(word)}
+var onTextChosen = (word) => {console.log(word)}
 var cancelClick = false
 export function SetTranslateEventListeners(doc) {
     const body = doc.getElementsByTagName("body")[0]
@@ -67,13 +67,17 @@ export function SetTranslateEventListeners(doc) {
         if (event.detail == 1) {
             cancelClick = false
             setTimeout(() => {
-                if (!cancelClick) 
-                    onWordChosen(getWord(event.clientX, event.clientY, doc))
+                if (cancelClick) return
+                const selectedString = doc.getSelection().toString() 
+                if (selectedString.length === 0)
+                    onTextChosen(getWord(event.clientX, event.clientY, doc))
+                else
+                    onTextChosen(selectedString)
             }, 200) //TODO: соригинальничать
         }
 
         else {
-            onWordChosen(getSentence(event.clientX, event.clientY, doc))
+            onTextChosen(getSentence(event.clientX, event.clientY, doc))
         }
     })
 }
