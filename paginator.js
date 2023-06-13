@@ -1,4 +1,4 @@
-import { SetTranslateEventListeners, getWord } from "./text-selector"
+import { SetTranslateEventListeners } from "./text-selector.js"
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 

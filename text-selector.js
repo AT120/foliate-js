@@ -1,5 +1,3 @@
-import { useDispatch } from "react-redux"
-
 function getContiniousStrAt(str, charNumber, goodSymbol) {
     let part1 = ''
     let part2 = ''
