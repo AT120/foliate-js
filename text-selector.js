@@ -40,12 +40,14 @@ function getTextInfo(x, y, doc) {
 
 function getWord(x, y, doc) {
     const [textNode, offset] = getTextInfo(x, y, doc)
+    if (!textNode) return ''
     const goodSymbol = RegExp(/\p{L}|-|'|`|’/, 'u') //TODO: а иероглифы всякие
     return getContiniousStrAt(textNode.data, offset, goodSymbol)
 }
 
 function getSentence(x, y, doc) {
     const [textNode, offset] = getTextInfo(x, y, doc)
+    if (!textNode) return ''
     const goodSymbol = RegExp(/[^.!?]/, 'u')
     return getContiniousStrAt(textNode.data, offset, goodSymbol)
 }
