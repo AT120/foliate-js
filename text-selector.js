@@ -54,7 +54,7 @@ export function setOnTextChosenCallback(func) {
     onTextChosen = func
 }
 
-var onTextChosen = (word) => {console.log(word)}
+var onTextChosen = (word, event) => {console.log(word)}
 var cancelClick = false
 export function SetTranslateEventListeners(doc) {
     const body = doc.getElementsByTagName("body")[0]
@@ -68,14 +68,14 @@ export function SetTranslateEventListeners(doc) {
                 if (cancelClick) return
                 const selectedString = doc.getSelection().toString() 
                 if (selectedString.length === 0)
-                    onTextChosen(getWord(event.clientX, event.clientY, doc))
+                    onTextChosen(getWord(event.clientX, event.clientY, doc), event)
                 else
-                    onTextChosen(selectedString)
+                    onTextChosen(selectedString, event)
             }, 200) //TODO: соригинальничать
         }
 
         else {
-            onTextChosen(getSentence(event.clientX, event.clientY, doc))
+            onTextChosen(getSentence(event.clientX, event.clientY, doc), event)
         }
     })
 }
