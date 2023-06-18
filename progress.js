@@ -93,7 +93,7 @@ export class SectionProgress {
         if (fraction === 0) return [0, 0]
         if (fraction === 1) return [this.sizes.length - 1, 1]
         const { sizes, sizeTotal } = this
-        const target = fraction * sizeTotal
+        const target = Math.ceil(fraction * sizeTotal)
         let index = -1
         let fractionInSection = 0
         let sum = 0
