@@ -10,7 +10,7 @@ function getContiniousStrAt(str, charNumber, goodSymbol) {
         if (!goodSymbol.test(str[i]))
             break
         part1 = str[i] + part1
-    }   
+    }
     return part1 + part2
 }
 
@@ -54,7 +54,7 @@ export function setOnTextChosenCallback(func) {
     onTextChosen = func
 }
 
-var onTextChosen = (word, event) => {console.log(word)}
+var onTextChosen = (word, event) => { console.log(word) }
 var cancelClick = false
 export function SetTranslateEventListeners(doc) {
     const body = doc.getElementsByTagName("body")[0]
@@ -66,11 +66,11 @@ export function SetTranslateEventListeners(doc) {
             cancelClick = false
             setTimeout(() => {
                 if (cancelClick) return
-                const selectedString = doc.getSelection().toString() 
-                if (selectedString.length === 0)
-                    onTextChosen(getWord(event.clientX, event.clientY, doc), event)
-                else
+                const selectedString = doc?.getSelection().toString()
+                if (selectedString)
                     onTextChosen(selectedString, event)
+                else
+                    onTextChosen(getWord(event.clientX, event.clientY, doc), event)
             }, 200) //TODO: соригинальничать
         }
 
