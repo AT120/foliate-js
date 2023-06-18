@@ -960,7 +960,7 @@ export class Paginator extends HTMLElement {
     destroy() {
         this.#observer.disconnect()
         // unobserve(this)
-        this.#view.destroy()
+        // this.#view.destroy()
         this.#view = null
         this.sections[this.#index]?.unload?.()
     }
