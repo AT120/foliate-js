@@ -56,7 +56,7 @@ const isFBZ = ({ name, type }) =>
     type === 'application/x-zip-compressed-fb2'
     || name.endsWith('.fb2.zip') || name.endsWith('.fbz')
 
-export const getView = async file => {
+export const insertView = async file => {
     let book
     if (file.isDirectory) {
         const loader = await makeDirectoryLoader(file)
@@ -95,6 +95,47 @@ export const getView = async file => {
     await view.open(book)
     return view
 }
+
+export const loadBook = async file => {
+    let book
+    if (file.isDirectory) {
+        const loader = await makeDirectoryLoader(file)
+        const { EPUB } = await import('./epub.js')
+        book = await new EPUB(loader).init()
+    }
+    else if (!file.size) throw new Error('File not found')
+    else if (await isZip(file)) {
+        const loader = await makeZipLoader(file)
+        if (isCBZ(file)) {
+            const { makeComicBook } = await import('./comic-book.js')
+            book = makeComicBook(loader, file)
+        } else if (isFBZ(file)) {
+            const { makeFB2 } = await import('./fb2.js')
+            const { entries } = loader
+            const entry = entries.find(entry => entry.filename.endsWith('.fb2'))
+            const blob = await loader.loadBlob((entry ?? entries[0]).filename)
+            book = await makeFB2(blob)
+        } else {
+            const { EPUB } = await import('./epub.js')
+            book = await new EPUB(loader).init()
+        }
+    } else {
+        const { isMOBI, MOBI } = await import('./mobi.js')
+        if (await isMOBI(file)) {
+            const fflate = await import('./vendor/fflate.js')
+            book = await new MOBI({ unzlib: fflate.unzlibSync }).open(file)
+        } else if (isFB2(file)) {
+            const { makeFB2 } = await import('./fb2.js')
+            book = await makeFB2(file)
+        }
+    }
+    if (!book) throw new Error('File type not supported')
+    return book
+    // const view = document.createElement('foliate-view')
+    // await view.open(book)
+    // return view
+}
+ 
 
 const getCSS = ({ spacing, justify, hyphenate }) => `
     @namespace epub "http://www.idpf.org/2007/ops";
@@ -182,7 +223,7 @@ export class Reader {
         menu.groups.layout.select('paginated')
     }
     async open(file) {
-        this.view = await getView(file)
+        this.view = await insertView(file)
         this.view.addEventListener('load', this.#onLoad.bind(this))
         this.view.addEventListener('relocate', this.#onRelocate.bind(this))
 
