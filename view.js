@@ -401,6 +401,10 @@ export class View extends HTMLElement {
             for (const item of list) this.deleteAnnotation(item)
         this.#searchResults.clear()
     }
+    
+    disconnectedCallback() {
+        this.close()
+    }
 }
 
 customElements.define('foliate-view', View)
