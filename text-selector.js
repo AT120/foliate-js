@@ -19,15 +19,15 @@ function getTextInfo(x, y, doc) {
     let range
     let textNode
     let offset
-    if (doc.caretPositionFromPoint) {
-        range = doc.caretPositionFromPoint(x, y)
-        textNode = range.offsetNode
-        offset = range.offset
-    } else if (doc.caretRangeFromPoint) {
+    if (doc?.caretPositionFromPoint) {
+        range = doc?.caretPositionFromPoint(x, y)
+        textNode = range?.offsetNode
+        offset = range?.offset
+    } else if (doc?.caretRangeFromPoint) {
         // Use WebKit-proprietary fallback method
-        range = doc.caretRangeFromPoint(x, y)
-        textNode = range.startContainer
-        offset = range.startOffset
+        range = doc?.caretRangeFromPoint(x, y)
+        textNode = range?.startContainer
+        offset = range?.startOffset
     }
 
     if (textNode?.nodeType === 3)
@@ -66,7 +66,7 @@ export function SetTranslateEventListeners(doc) {
             cancelClick = false
             setTimeout(() => {
                 if (cancelClick) return
-                const selectedString = doc?.getSelection().toString()
+                const selectedString = doc?.getSelection()?.toString()
                 if (selectedString)
                     onTextChosen(selectedString, event)
                 else
