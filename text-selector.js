@@ -60,11 +60,10 @@ var selection = ''
 var clicked = false
 export function SetTranslateEventListeners(doc) {
     const body = doc.getElementsByTagName("body")[0]
-    //TODO: тач
     doc.addEventListener("mousedown", () => { clicked = true })
 
     doc.addEventListener("mouseup", (event) => {
-        console.log(event.detail)
+        // console.log(event.detail)
         cancelClick = true
         if (event.detail == 1) {
             cancelClick = false
