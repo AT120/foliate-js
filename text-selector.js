@@ -56,26 +56,48 @@ export function setOnTextChosenCallback(func) {
 
 var onTextChosen = (word, event) => { console.log(word) }
 var cancelClick = false
+var selection = ''
+var clicked = false
 export function SetTranslateEventListeners(doc) {
     const body = doc.getElementsByTagName("body")[0]
     //TODO: тач
-    body.addEventListener("click", (event) => {
-        // console.log(event.detail)
+    doc.addEventListener("mousedown", () => { clicked = true })
+
+    doc.addEventListener("mouseup", (event) => {
+        console.log(event.detail)
         cancelClick = true
         if (event.detail == 1) {
             cancelClick = false
             setTimeout(() => {
-                if (cancelClick) return
-                const selectedString = doc?.getSelection()?.toString()
-                if (selectedString)
+                if (!cancelClick) {
+                    const selectedString = doc?.getSelection()?.toString()
+                    if (selectedString)
                     onTextChosen(selectedString, event)
-                else
+                    else
                     onTextChosen(getWord(event.clientX, event.clientY, doc), event)
+                }
             }, 200) //TODO: соригинальничать
         }
-
+        
         else {
             onTextChosen(getSentence(event.clientX, event.clientY, doc), event)
+            // console.log(doc.getSelection())
         }
+
+        clicked = false
+    })
+
+
+    doc.addEventListener("selectionchange", (event) => {
+
+        const selectedString = doc?.getSelection()?.toString()
+        selection = selectedString
+        // console.log(event)
+        if (clicked)
+            return
+        setTimeout(() => {
+            if (selectedString === selection)
+                onTextChosen(selectedString, event)
+        }, 500)
     })
 }
